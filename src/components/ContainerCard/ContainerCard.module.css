@@ -1,0 +1,28 @@
+ /* Cada card */
+ .card {
+  width: 550px;
+  height: 600px;
+  max-width: 100%;
+  background-color: #333333;
+  padding: 18px;
+  border-radius: 30px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* <-- Altere aqui */
+  align-items: center;
+}
+  
+  /* Responsividade: Quando a tela for pequena */
+  @media (max-width: 900px) {
+    .containerWrapper {
+      width: 100%;           /* Corrigido aqui */
+      min-height: 100vh;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 1rem 0;
+    }
+  }

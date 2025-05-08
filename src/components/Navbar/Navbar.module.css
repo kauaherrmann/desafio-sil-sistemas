@@ -1,0 +1,41 @@
+body {
+    background-color: #ffffff; /* Escolha a cor desejada */
+  }
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 350px; /* Ajuste aqui se quiser outro tamanho */
+    background-color: #A2DAFB;
+    display: flex;
+    align-items: center;
+    padding: 0 1.5rem;
+    z-index: 1000;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .menuButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-right: 1rem;
+  }
+  
+  .menuLine {
+    width: 30px;
+    height: 5px;
+    background-color: #333;
+  }
+
+  .logoSvg {
+    height: 320px;
+    width: auto;
+    flex: 1;
+    object-fit: contain;
+    display: block;
+  }
+  

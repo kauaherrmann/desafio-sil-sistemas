@@ -1,0 +1,41 @@
+.cardContainerWrapper {
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 2rem;
+  padding-top: 30px; /* Espaço para a navbar fixa */
+}
+
+.staticCards {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  justify-content: center;
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .staticCards {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  .cardContainerWrapper {
+    padding-top: 360px;
+    gap: 1rem;
+  }
+}
+
+.overNavbar {
+  position: fixed;
+  top: 300px; /* ajuste conforme a altura da sua navbar */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2000; /* maior que o z-index da navbar */
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+}
