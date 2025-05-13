@@ -1,54 +1,77 @@
-# React + TypeScript + Vite
+# Desafio SIL Sistemas
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este projeto é um site React + TypeScript que exibe:
+- Previsão do tempo para cidades brasileiras (WeatherAPI)
+- Conversor de moedas (AwesomeAPI)
+- Principais notícias do mundo (GNews)
 
-Currently, two official plugins are available:
+A interface é responsiva, utiliza Material UI (MUI) para estilização e consome dados de APIs externas de forma segura e centralizada.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Como executar o projeto
 
-## Expanding the ESLint configuration
+1. **Clone o repositório**
+   ```sh
+   git clone https://github.com/seu-usuario/seu-repo.git
+   cd seu-repositório
+   ```
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+2. **Instale as dependências**
+   ```sh
+   npm install
+   ```
+   ou
+   ```sh
+   yarn
+   ```
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+3. **Configure as variáveis de ambiente**
+
+   Crie um arquivo `.env` na raiz do projeto com o seguinte conteúdo:
+   ```
+   VITE_WEATHER_API_KEY=sua_chave_weatherapi
+   VITE_GNEWS_API_KEY=sua_chave_gnews
+   ```
+
+   Substitua pelos valores reais das suas chaves de API.
+
+4. **Execute o projeto**
+   ```sh
+   npm run dev
+   ```
+   ou
+   ```sh
+   yarn dev
+   ```
+
+5. **Acesse no navegador**
+   ```
+   http://localhost:5173
+   ```
+
+## Como rodar os testes
+
+```sh
+npm test
+```
+ou
+```sh
+yarn test
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Os testes estão localizados em `src/components/__tests__`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## APIs utilizadas
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+- [WeatherAPI](https://www.weatherapi.com/) — Previsão do tempo
+- [AwesomeAPI](https://docs.awesomeapi.com.br/api-de-moedas) — Conversão de moedas
+- [GNews](https://gnews.io/docs/) — Notícias
+
+## Tecnologias
+
+- React + TypeScript
+- Vite
+- Material UI (MUI)
+- Axios
+- React Testing Library & Jest
+
+---

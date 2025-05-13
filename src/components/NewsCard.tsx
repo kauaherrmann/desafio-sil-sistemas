@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -10,33 +9,19 @@ import {
   ListItem,
   ListItemText,
 } from "@mui/material";
-import axios from "axios";
+import { useFetchData } from "../hooks/useFetchData";
 
-const API_KEY = "f3b38f185b784385257e99bddc98ed5b"; // Cadastre-se em https://gnews.io/ para obter uma chave gratuita
+const API_KEY = import.meta.env.VITE_GNEWS_API_KEY as string; // depois mova para .env
 const API_URL = `https://gnews.io/api/v4/top-headlines?lang=en&max=5&token=${API_KEY}`;
 
 const NewsCard = () => {
-  const [news, setNews] = useState<
-    { title: string; description: string; url: string }[]
-  >([]);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    setLoading(true);
-    axios
-      .get(API_URL)
-      .then((res) => {
-        setNews(
-          res.data.articles.map((a: any) => ({
-            title: a.title,
-            description: a.description,
-            url: a.url,
-          }))
-        );
-      })
-      .catch(() => setNews([]))
-      .finally(() => setTimeout(() => setLoading(false), 1000));
-  }, []);
+  const { data, loading, error } = useFetchData(API_URL, undefined, []);
+  const news =
+    data?.articles?.map((a: any) => ({
+      title: a.title,
+      description: a.description,
+      url: a.url,
+    })) ?? [];
 
   return (
     <Card
@@ -65,16 +50,18 @@ const NewsCard = () => {
           >
             <CircularProgress size={28} />
           </Box>
+        ) : error ? (
+          <Typography color="error">{error}</Typography>
         ) : news.length > 0 ? (
           <List
             dense
             sx={{
-              maxHeight: 180, // ajuste conforme necessário
+              maxHeight: 180,
               overflow: "auto",
               mb: 1,
             }}
           >
-            {news.map((item, idx) => (
+            {news.map((item: { title: string; description: string; url: string }, idx: number) => (
               <ListItem key={idx} disablePadding>
                 <ListItemText
                   primary={

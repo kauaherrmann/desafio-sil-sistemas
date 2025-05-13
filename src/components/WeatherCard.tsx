@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import WbSunnyIcon from "@mui/icons-material/WbSunny";
 import {
   Card,
@@ -9,50 +9,30 @@ import {
   FormControl,
   InputLabel,
   CircularProgress,
-  Box, // Adicione o Box
+  Box,
+  Alert, // Adicione o Alert aqui
 } from "@mui/material";
-import axios from "axios";
+import { useFetchData } from "../hooks/useFetchData";
 
 const cities = ["São Paulo", "Rio de Janeiro", "Curitiba"];
-const API_KEY = "918f1ec3fdb840d6be183238250705";
+const API_KEY = import.meta.env.VITE_WEATHER_API_KEY as string;
 
 const WeatherCard = () => {
   const [city, setCity] = useState(cities[0]);
-  const [weather, setWeather] = useState<{
-    temp: string;
-    desc: string;
-    icon: string;
-    feelslike: string;
-    humidity: string;
-    wind: string;
-    updated: string;
-  } | null>(null);
-  const [loading, setLoading] = useState(false);
+  const url = `https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${encodeURIComponent(city)}`;
+  const { data, loading, error } = useFetchData(url, undefined, [city]);
 
-  useEffect(() => {
-    setLoading(true);
-    axios
-      .get(
-        `https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${encodeURIComponent(
-          city
-        )}`
-      )
-      .then((res) => {
-        setWeather({
-          temp: `${res.data.current.temp_c}°C`,
-          desc: res.data.current.condition.text,
-          icon: res.data.current.condition.icon,
-          feelslike: `${res.data.current.feelslike_c}°C`,
-          humidity: `${res.data.current.humidity}%`,
-          wind: `${res.data.current.wind_kph} km/h`,
-          updated: res.data.current.last_updated,
-        });
-      })
-      .catch(() => setWeather(null))
-      .finally(() => {
-        setTimeout(() => setLoading(false), 1000);
-      });
-  }, [city]);
+  const weather = data
+    ? {
+        temp: `${data.current.temp_c}°C`,
+        desc: data.current.condition.text,
+        icon: data.current.condition.icon,
+        feelslike: `${data.current.feelslike_c}°C`,
+        humidity: `${data.current.humidity}%`,
+        wind: `${data.current.wind_kph} km/h`,
+        updated: data.current.last_updated,
+      }
+    : null;
 
   return (
     <Card
@@ -79,9 +59,6 @@ const WeatherCard = () => {
             Weather forecast
           </Typography>
         </Box>
-        <FormControl fullWidth size="small" sx={{ mb: 1 }}>
-          {/* ... */}
-        </FormControl>
         <FormControl fullWidth size="small" sx={{ mb: 2 }}>
           <InputLabel id="city-select-label">City</InputLabel>
           <Select
@@ -107,6 +84,12 @@ const WeatherCard = () => {
           >
             <CircularProgress size={32} />
           </Box>
+        ) : error ? (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error === "Network Error"
+              ? "Não foi possível conectar ao serviço de clima. Verifique sua conexão."
+              : `Erro ao buscar dados do clima: ${error}`}
+          </Alert>
         ) : weather ? (
           <>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -130,11 +113,8 @@ const WeatherCard = () => {
               Humidity: {weather.humidity}
             </Typography>
           </>
-        ) : (
-          <Typography color="error">Erro ao buscar clima.</Typography>
-        )}
+        ) : null}
 
-        {/* Adicione este bloco abaixo */}
         <Box mt="auto" pt={2}>
           <Typography
             variant="body2"

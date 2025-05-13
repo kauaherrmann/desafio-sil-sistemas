@@ -8,7 +8,7 @@ import {
   TextField,
   Autocomplete,
 } from "@mui/material";
-import axios from "axios";
+import { useFetchData } from "../hooks/useFetchData";
 
 const currencyOptions = [
   { country: "United States", currency: "USD", label: "United States (USD)" },
@@ -20,15 +20,20 @@ const currencyOptions = [
 
 const API_URL = "https://economia.awesomeapi.com.br/json/last/";
 
-// ...existing imports...
-
 const ExchangeRatesCard = () => {
   const [from, setFrom] = useState<(typeof currencyOptions)[0] | null>(null);
   const [to, setTo] = useState<(typeof currencyOptions)[0] | null>(null);
   const [fromValue, setFromValue] = useState(1);
   const [toValue, setToValue] = useState(0);
   const [rate, setRate] = useState<number | null>(null);
-  const [loading, setLoading] = useState(false);
+
+  // Monta a URL apenas se ambas as moedas forem selecionadas e diferentes
+  const url =
+    from && to && from.currency !== to.currency
+      ? `${API_URL}${from.currency}-${to.currency}`
+      : null;
+
+  const { data, loading, error } = useFetchData(url, undefined, [from, to]);
 
   useEffect(() => {
     if (!from || !to) return;
@@ -37,18 +42,13 @@ const ExchangeRatesCard = () => {
       setToValue(fromValue);
       return;
     }
-    setLoading(true);
-    axios
-      .get(`${API_URL}${from.currency}-${to.currency}`)
-      .then((res) => {
-        const data = res.data[`${from.currency}${to.currency}`];
-        const bid = parseFloat(data.bid);
-        setRate(bid);
-        setToValue(Number((fromValue * bid).toFixed(4)));
-      })
-      .catch(() => setRate(null))
-      .finally(() => setTimeout(() => setLoading(false), 800));
-  }, [from, to, fromValue]);
+    if (data) {
+      const pair = `${from.currency}${to.currency}`;
+      const bid = parseFloat(data[pair]?.bid ?? "1");
+      setRate(bid);
+      setToValue(Number((fromValue * bid).toFixed(4)));
+    }
+  }, [data, from, to, fromValue]);
 
   const handleFromValueChange = (value: string) => {
     const num = parseFloat(value);
@@ -65,8 +65,6 @@ const ExchangeRatesCard = () => {
       setFromValue(Number((num / rate).toFixed(4)));
     }
   };
-
-  // ...handlers unchanged...
 
   return (
     <Card
@@ -146,13 +144,13 @@ const ExchangeRatesCard = () => {
           >
             <CircularProgress size={28} />
           </Box>
+        ) : error ? (
+          <Typography color="error">Error fetching exchange rate.</Typography>
         ) : rate !== null ? (
           <Typography variant="body2" color="text.secondary">
             1 {from.currency} = {rate} {to.currency}
           </Typography>
-        ) : (
-          <Typography color="error">Error fetching exchange rate.</Typography>
-        )}
+        ) : null}
         <Box mt="auto" pt={2}>
           <Typography
             variant="body2"
