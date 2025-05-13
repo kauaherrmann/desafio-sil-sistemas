@@ -1,5 +1,8 @@
 import { useState } from "react";
-import WbSunnyIcon from "@mui/icons-material/WbSunny";
+import DeviceThermostatIcon from "@mui/icons-material/DeviceThermostat";
+import WaterDropIcon from "@mui/icons-material/WaterDrop";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import {
   Card,
   CardContent,
@@ -7,14 +10,13 @@ import {
   Select,
   MenuItem,
   FormControl,
-  InputLabel,
   CircularProgress,
   Box,
   Alert, // Adicione o Alert aqui
 } from "@mui/material";
 import { useFetchData } from "../hooks/useFetchData";
 
-const cities = ["São Paulo", "Rio de Janeiro", "Curitiba"];
+const cities = ["São Paulo", "Rio de Janeiro", "Curitiba", "Passo Fundo", "Porto Alegre"];
 const API_KEY = import.meta.env.VITE_WEATHER_API_KEY as string;
 
 const WeatherCard = () => {
@@ -47,33 +49,60 @@ const WeatherCard = () => {
       }}
     >
       <CardContent
-        sx={{ minHeight: 260, display: "flex", flexDirection: "column" }}
-      >
-        <Box display="flex" alignItems="center" gap={1} mb={2}>
-          <WbSunnyIcon sx={{ color: "#a8e1fb", fontSize: 40 }} />
-          <Typography
-            variant="h6"
-            gutterBottom
-            sx={{ fontSize: 28, fontWeight: "bold", mt: 1 }}
-          >
-            Weather forecast
-          </Typography>
-        </Box>
-        <FormControl fullWidth size="small" sx={{ mb: 2 }}>
-          <InputLabel id="city-select-label">City</InputLabel>
-          <Select
-            labelId="city-select-label"
-            value={city}
-            label="Cidade"
-            onChange={(e) => setCity(e.target.value)}
-          >
-            {cities.map((c) => (
-              <MenuItem key={c} value={c}>
-                {c}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+       sx={{ minHeight: 260, display: "flex", flexDirection: "column" }}
+>     
+       <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
+         <Typography
+           variant="h6"
+           gutterBottom
+           sx={{ fontSize: 29, fontWeight: "bold", mt: 1 }}
+         >
+           Weather forecast
+         </Typography>
+         <FormControl
+           size="small"
+           sx={{ Width: 160, minWidth: 160 }}
+           variant="standard"
+         >
+           <Select
+             variant="standard"
+             labelId="city-select-label"
+             value={city}
+             onChange={(e) => setCity(e.target.value)}
+             IconComponent={ArrowDropDownIcon}
+             disableUnderline
+             renderValue={(selected) => (
+               <Box display="flex" alignItems="center" gap={1}>
+                 <LocationOnIcon sx={{ color: "#272727", fontSize: 22 }} />
+                 <span style={{ fontSize: 16 }}>{selected}</span>
+               </Box>
+             )}
+             sx={{
+               pl: 0,
+               ".MuiSelect-select": {
+                 display: "flex",
+                 alignItems: "center",
+                 gap: 1,
+                 paddingLeft: 0,
+               },
+               "&::before, &::after": {
+                 border: "none !important",
+               },
+               background: "none",
+               boxShadow: "none",
+             }}
+           >
+             {cities.map((c) => (
+               <MenuItem key={c} value={c}>
+                 <Box display="flex" alignItems="center" gap={1}>
+                   <LocationOnIcon sx={{ color: "#272727", fontSize: 22 }} />
+                   <span style={{ fontSize: 16 }}>{c}</span>
+                 </Box>
+               </MenuItem>
+             ))}
+           </Select>
+         </FormControl>
+       </Box>
         {loading ? (
           <Box
             flex={1}
@@ -92,48 +121,75 @@ const WeatherCard = () => {
           </Alert>
         ) : weather ? (
           <>
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <Box display="flex" alignItems="center" gap={2} mb={2}>
               {weather.icon && (
                 <img
                   src={weather.icon}
                   alt={weather.desc}
-                  width={40}
-                  height={40}
+                  width={60}
+                  height={60}
                 />
               )}
               <Typography variant="h4" sx={{ fontSize: 48 }}>
                 {weather.temp}
               </Typography>
-            </div>
-            <Typography color="text.secondary">{weather.desc}</Typography>
-            <Typography variant="body2">
-              Feels like: {weather.feelslike}
+              <Box sx={{ flex: 1, display: "flex", justifyContent: "center" }}>
+                <Typography color="text.secondary" sx={{ fontSize: 22 }}>
+                  {weather.desc}
+                </Typography>
+              </Box>
+            </Box>
+            <Typography
+              variant="body2"
+              sx={{
+                fontSize: 20,
+                display: "flex",
+                alignItems: "center",
+                gap: 0.5,
+                mb: 0.5,
+              }}
+            >
+              <DeviceThermostatIcon sx={{ fontSize: 23, mr: 1, color: "#0b72d2", opacity: 1 }} />
+              <span style={{ opacity: 0.7 }}>Feels like:</span>
+              <span style={{ opacity: 1, fontWeight: 500, marginLeft: 6 }}>{weather.feelslike}</span>
             </Typography>
-            <Typography variant="body2">
-              Humidity: {weather.humidity}
+            <Typography
+              variant="body2"
+              sx={{
+                fontSize: 20,
+                display: "flex",
+                alignItems: "center",
+                gap: 0.5,
+              }}
+            >
+              <WaterDropIcon sx={{ fontSize: 22, mr: 1, color: "#0b72d2", opacity: 1 }} />
+              <span style={{ opacity: 0.7 }}>Humidity:</span>
+              <span style={{ opacity: 1, fontWeight: 500, marginLeft: 6 }}>{weather.humidity}</span>
             </Typography>
           </>
         ) : null}
 
-        <Box mt="auto" pt={2}>
-          <Typography
-            variant="body2"
-            color="primary"
-            component="a"
-            href="https://www.weatherapi.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: 1,
-              textDecoration: "none",
-            }}
-          >
-            To learn more about this API
-            <span aria-hidden="true">→</span>
-          </Typography>
-        </Box>
+        {!loading && (
+           <Box mt="auto" pt={2}>
+             <Typography
+               variant="body2"
+               color="primary"
+               component="a"
+               href="https://www.weatherapi.com/"
+               target="_blank"
+               rel="noopener noreferrer"
+               sx={{
+                 display: "flex",
+                 alignItems: "center",
+                 gap: 1,
+                 textDecoration: "none",
+               }}
+             >
+               To learn more about this API
+               <span aria-hidden="true">→</span>
+             </Typography>
+           </Box>
+         )}
       </CardContent>
     </Card>
   );

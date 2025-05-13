@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Paper from "@mui/material/Paper";
 import {
   Card,
   CardContent,
@@ -15,7 +16,14 @@ const currencyOptions = [
   { country: "Brazil", currency: "BRL", label: "Brazil (BRL)" },
   { country: "Eurozone", currency: "EUR", label: "Eurozone (EUR)" },
   { country: "Bitcoin", currency: "BTC", label: "Bitcoin (BTC)" },
-  // ...adicione mais moedas
+  { country: "United Kingdom", currency: "GBP", label: "United Kingdom (GBP)" },
+  { country: "Japan", currency: "JPY", label: "Japan (JPY)" },
+  { country: "Canada", currency: "CAD", label: "Canada (CAD)" },
+  { country: "Australia", currency: "AUD", label: "Australia (AUD)" },
+  { country: "Switzerland", currency: "CHF", label: "Switzerland (CHF)" },
+  { country: "Argentina", currency: "ARS", label: "Argentina (ARS)" },
+  { country: "China", currency: "CNY", label: "China (CNY)" },
+  { country: "Russia", currency: "RUB", label: "Russia (RUB)" },
 ];
 
 const API_URL = "https://economia.awesomeapi.com.br/json/last/";
@@ -81,7 +89,11 @@ const ExchangeRatesCard = () => {
       <CardContent
         sx={{ minHeight: 220, display: "flex", flexDirection: "column" }}
       >
-        <Typography variant="h6" gutterBottom>
+        <Typography
+          variant="h5"
+          gutterBottom
+          sx={{ fontWeight: "bold", fontSize: 28, mt: 1 }}
+        >
           Currency Converter
         </Typography>
         <Box display="flex" gap={2} mb={2}>
@@ -95,6 +107,28 @@ const ExchangeRatesCard = () => {
               renderInput={(params) => (
                 <TextField {...params} label="From" size="small" />
               )}
+              slotProps={{
+                popper: {
+                  modifiers: [
+                    {
+                      name: "setWidth",
+                      enabled: true,
+                      phase: "beforeWrite",
+                      requires: ["computeStyles"],
+                      fn: ({ state }) => {
+                        state.styles.popper.width = `${state.rects.reference.width}px`;
+                      },
+                    },
+                  ],
+                },
+                paper: {
+                  sx: {
+                    maxWidth: 220,
+                    width: "100%",
+                    boxSizing: "border-box",
+                  },
+                },
+              }}
             />
             <TextField
               type="number"
@@ -117,6 +151,30 @@ const ExchangeRatesCard = () => {
               renderInput={(params) => (
                 <TextField {...params} label="To" size="small" />
               )}
+              slotProps={{
+                popper: {
+                  
+                  modifiers: [
+                    {
+                      name: "setWidth",
+                      enabled: true,
+                      phase: "beforeWrite",
+                      requires: ["computeStyles"],
+                      fn: ({ state }) => {
+                        state.styles.popper.width = `${state.rects.reference.width}px`;
+                      },
+                    },
+                  ],
+                },
+                paper: {
+                  sx: {
+                    maxWidth: 220,
+                    maxHeight: 180,
+                    width: "100%",
+                    boxSizing: "border-box",
+                  },
+                },
+              }}
             />
             <TextField
               type="number"
