@@ -235,7 +235,7 @@ const ExchangeRatesCard = () => {
             }}
           >
             Click to learn about the API
-            <span aria-hidden="true">→</span>
+            <span aria-hidden="true">❮</span>
           </Typography>
         </Box>
       </CardContent>

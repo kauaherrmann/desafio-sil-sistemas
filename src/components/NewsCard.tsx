@@ -36,6 +36,7 @@ const NewsCard = () => {
         m: 1,
         borderRadius: 3,
         boxShadow: 4,
+        bgcolor: "#000032",
       }}
     >
       <CardContent
@@ -43,6 +44,7 @@ const NewsCard = () => {
           minHeight: 220,
           display: "flex",
           flexDirection: "column",
+          color: "#fffefc",
         }}
       >
         {/* Título do card */}
@@ -68,6 +70,22 @@ const NewsCard = () => {
               maxHeight: 180,
               overflow: "auto",
               mb: 1,
+              // Customização da scrollbar
+              '&::-webkit-scrollbar': {
+                width: 8,
+                backgroundColor: '#00c48c', // cor do track
+                borderRadius: 8,
+              },
+              '&::-webkit-scrollbar-thumb': {
+                backgroundColor: '#00c48c', // cor do thumb
+                borderRadius: 8,
+              },
+              '&::-webkit-scrollbar-thumb:hover': {
+                backgroundColor: '#00a37a', // cor do thumb ao passar o mouse
+              },
+              // Firefox
+              scrollbarColor: '#00c48c #000133',
+              scrollbarWidth: 'thin',
             }}
           >
             {news.map((item: { title: string; description: string; url: string }, idx: number) => (
@@ -87,12 +105,15 @@ const NewsCard = () => {
                         whiteSpace: "nowrap",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
+                        color: "#00c48c",
                       }}
                     >
                       {item.title}
                     </Link>
                   }
                   secondary={item.description}
+                  primaryTypographyProps={{ sx: { color: "#fffefc" } }}
+  secondaryTypographyProps={{ sx: { color: "#fffefc"} }}
                 />
               </ListItem>
             ))}
@@ -106,7 +127,7 @@ const NewsCard = () => {
         <Box mt="auto" pt={2}>
           <Typography
             variant="body2"
-            color="primary"
+            color="#00c48c"
             component="a"
             href="https://gnews.io/docs/"
             target="_blank"
@@ -119,7 +140,7 @@ const NewsCard = () => {
             }}
           >
             To learn more about this API
-            <span aria-hidden="true">→</span>
+            <span aria-hidden="true">➤</span>
           </Typography>
         </Box>
       </CardContent>
