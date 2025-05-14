@@ -11,11 +11,14 @@ import {
 } from "@mui/material";
 import { useFetchData } from "../hooks/useFetchData";
 
-const API_KEY = import.meta.env.VITE_GNEWS_API_KEY as string; // depois mova para .env
+// Chave da API e URL de notícias
+const API_KEY = import.meta.env.VITE_GNEWS_API_KEY as string;
 const API_URL = `https://gnews.io/api/v4/top-headlines?lang=en&max=5&token=${API_KEY}`;
 
 const NewsCard = () => {
+  // Busca as notícias usando hook customizado
   const { data, loading, error } = useFetchData(API_URL, undefined, []);
+  // Mapeia os dados recebidos para um formato mais simples
   const news =
     data?.articles?.map((a: any) => ({
       title: a.title,
@@ -36,11 +39,17 @@ const NewsCard = () => {
       }}
     >
       <CardContent
-        sx={{ minHeight: 220, display: "flex", flexDirection: "column" }}
+        sx={{
+          minHeight: 220,
+          display: "flex",
+          flexDirection: "column",
+        }}
       >
-        <Typography variant="h6" gutterBottom>
+        {/* Título do card */}
+        <Typography variant="h6" gutterBottom sx={{ fontWeight: "bold", fontSize: 24, mb: 1 }}>
           News
         </Typography>
+        {/* Conteúdo: loading, erro ou lista de notícias */}
         {loading ? (
           <Box
             display="flex"
@@ -70,6 +79,15 @@ const NewsCard = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                       underline="hover"
+                      sx={{
+                        fontWeight: 500,
+                        fontSize: 16,
+                        display: "inline-block",
+                        maxWidth: 370,
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
                     >
                       {item.title}
                     </Link>
@@ -84,6 +102,7 @@ const NewsCard = () => {
             No news found.
           </Typography>
         )}
+        {/* Link para documentação da API */}
         <Box mt="auto" pt={2}>
           <Typography
             variant="body2"

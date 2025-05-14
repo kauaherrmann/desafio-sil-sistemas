@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import Paper from "@mui/material/Paper";
 import {
   Card,
   CardContent,
@@ -11,6 +10,7 @@ import {
 } from "@mui/material";
 import { useFetchData } from "../hooks/useFetchData";
 
+// Lista de opções de moedas e países disponíveis para conversão
 const currencyOptions = [
   { country: "United States", currency: "USD", label: "United States (USD)" },
   { country: "Brazil", currency: "BRL", label: "Brazil (BRL)" },
@@ -21,14 +21,13 @@ const currencyOptions = [
   { country: "Canada", currency: "CAD", label: "Canada (CAD)" },
   { country: "Australia", currency: "AUD", label: "Australia (AUD)" },
   { country: "Switzerland", currency: "CHF", label: "Switzerland (CHF)" },
-  { country: "Argentina", currency: "ARS", label: "Argentina (ARS)" },
-  { country: "China", currency: "CNY", label: "China (CNY)" },
-  { country: "Russia", currency: "RUB", label: "Russia (RUB)" },
 ];
 
+// URL base da API de câmbio
 const API_URL = "https://economia.awesomeapi.com.br/json/last/";
 
 const ExchangeRatesCard = () => {
+  // Estados para as moedas selecionadas e valores de conversão
   const [from, setFrom] = useState<(typeof currencyOptions)[0] | null>(null);
   const [to, setTo] = useState<(typeof currencyOptions)[0] | null>(null);
   const [fromValue, setFromValue] = useState(1);
@@ -41,8 +40,10 @@ const ExchangeRatesCard = () => {
       ? `${API_URL}${from.currency}-${to.currency}`
       : null;
 
+  // Hook customizado para buscar dados da API
   const { data, loading, error } = useFetchData(url, undefined, [from, to]);
 
+  // Atualiza taxa e valores ao trocar moedas ou valores
   useEffect(() => {
     if (!from || !to) return;
     if (from.currency === to.currency) {
@@ -58,6 +59,7 @@ const ExchangeRatesCard = () => {
     }
   }, [data, from, to, fromValue]);
 
+  // Atualiza valor de destino ao alterar valor de origem
   const handleFromValueChange = (value: string) => {
     const num = parseFloat(value);
     setFromValue(num);
@@ -66,6 +68,7 @@ const ExchangeRatesCard = () => {
     }
   };
 
+  // Atualiza valor de origem ao alterar valor de destino
   const handleToValueChange = (value: string) => {
     const num = parseFloat(value);
     setToValue(num);
@@ -87,15 +90,21 @@ const ExchangeRatesCard = () => {
       }}
     >
       <CardContent
-        sx={{ minHeight: 220, display: "flex", flexDirection: "column" }}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+        }}
       >
+        {/* Título do conversor */}
         <Typography
           variant="h5"
           gutterBottom
           sx={{ fontWeight: "bold", fontSize: 28, mt: 1 }}
+          mb={2}
         >
           Currency Converter
         </Typography>
+        {/* Seletores de moedas e campos de valor */}
         <Box display="flex" gap={2} mb={2}>
           {/* Caixa da moeda de origem */}
           <Box flex={1}>
@@ -124,6 +133,7 @@ const ExchangeRatesCard = () => {
                 paper: {
                   sx: {
                     maxWidth: 220,
+                    maxHeight: 150,
                     width: "100%",
                     boxSizing: "border-box",
                   },
@@ -153,7 +163,6 @@ const ExchangeRatesCard = () => {
               )}
               slotProps={{
                 popper: {
-                  
                   modifiers: [
                     {
                       name: "setWidth",
@@ -169,7 +178,7 @@ const ExchangeRatesCard = () => {
                 paper: {
                   sx: {
                     maxWidth: 220,
-                    maxHeight: 180,
+                    maxHeight: 150,
                     width: "100%",
                     boxSizing: "border-box",
                   },
@@ -188,7 +197,7 @@ const ExchangeRatesCard = () => {
             />
           </Box>
         </Box>
-        {/* Mensagem de instrução */}
+        {/* Mensagem de instrução ou resultado */}
         {!from || !to ? (
           <Typography color="text.secondary" align="center">
             Please select both currencies to see the exchange rate.
@@ -209,6 +218,7 @@ const ExchangeRatesCard = () => {
             1 {from.currency} = {rate} {to.currency}
           </Typography>
         ) : null}
+        {/* Link para documentação da API */}
         <Box mt="auto" pt={2}>
           <Typography
             variant="body2"
@@ -224,7 +234,7 @@ const ExchangeRatesCard = () => {
               textDecoration: "none",
             }}
           >
-            To learn more about this API
+            Click to learn about the API
             <span aria-hidden="true">→</span>
           </Typography>
         </Box>
