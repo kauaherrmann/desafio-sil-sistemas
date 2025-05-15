@@ -74,4 +74,4 @@ Os testes estão localizados em `src/components/__tests__`.
 - Axios
 - React Testing Library & Jest
 
----
+---![print-sil](https://github.com/user-attachments/assets/1627dfd5-cddb-40b8-afd8-2c9980011c46)
