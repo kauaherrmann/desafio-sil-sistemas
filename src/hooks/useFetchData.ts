@@ -15,7 +15,7 @@ export function useFetchData<T = any>(
     if (!url) return;
     setLoading(true);
     setError(null);
-    setData(null); // Limpa dados antigos ao iniciar nova busca
+    setData(null); 
 
     (async () => {
       try {
