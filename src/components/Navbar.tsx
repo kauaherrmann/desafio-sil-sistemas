@@ -7,11 +7,11 @@ const Navbar = () => (
   <AppBar
     position="static"
     color="default"
-    elevation={0} // Remove a sombra
+    elevation={0} 
     sx={{
       boxShadow: "none",
       backgroundColor: "#a8e1fb",
-    }} // Garante que não há sombra
+    }} 
   >
     <Toolbar sx={{ height: 300, minHeight: "300px !important" }}>
       <Box flex={1} />

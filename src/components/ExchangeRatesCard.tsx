@@ -7,6 +7,7 @@ import {
   Box,
   TextField,
   Autocomplete,
+  Alert,
 } from "@mui/material";
 import { useFetchData } from "../hooks/useFetchData";
 
@@ -93,9 +94,11 @@ const ExchangeRatesCard = () => {
         sx={{
           display: "flex",
           flexDirection: "column",
+          minHeight: 300,
+          maxHeight: 300,
+          height: 300,
         }}
       >
-        {/* Título do conversor */}
         <Typography
           variant="h5"
           gutterBottom
@@ -104,140 +107,161 @@ const ExchangeRatesCard = () => {
         >
           Currency Converter
         </Typography>
-        {/* Seletores de moedas e campos de valor */}
-        <Box display="flex" gap={2} mb={2}>
-          {/* Caixa da moeda de origem */}
-          <Box flex={1}>
-            <Autocomplete
-              options={currencyOptions}
-              getOptionLabel={(option) => option.label}
-              value={from}
-              onChange={(_, newValue) => setFrom(newValue)}
-              renderInput={(params) => (
-                <TextField {...params} label="From" size="small" />
-              )}
-              slotProps={{
-                popper: {
-                  modifiers: [
-                    {
-                      name: "setWidth",
-                      enabled: true,
-                      phase: "beforeWrite",
-                      requires: ["computeStyles"],
-                      fn: ({ state }) => {
-                        state.styles.popper.width = `${state.rects.reference.width}px`;
-                      },
-                    },
-                  ],
-                },
-                paper: {
-                  sx: {
-                    maxWidth: 220,
-                    maxHeight: 150,
-                    width: "100%",
-                    boxSizing: "border-box",
-                  },
-                },
-              }}
-            />
-            <TextField
-              type="number"
-              label="Amount"
-              size="small"
-              value={fromValue}
-              onChange={(e) => handleFromValueChange(e.target.value)}
-              fullWidth
-              sx={{ mt: 1 }}
-              disabled={!from}
-            />
-          </Box>
-          {/* Caixa da moeda de destino */}
-          <Box flex={1}>
-            <Autocomplete
-              options={currencyOptions}
-              getOptionLabel={(option) => option.label}
-              value={to}
-              onChange={(_, newValue) => setTo(newValue)}
-              renderInput={(params) => (
-                <TextField {...params} label="To" size="small" />
-              )}
-              slotProps={{
-                popper: {
-                  modifiers: [
-                    {
-                      name: "setWidth",
-                      enabled: true,
-                      phase: "beforeWrite",
-                      requires: ["computeStyles"],
-                      fn: ({ state }) => {
-                        state.styles.popper.width = `${state.rects.reference.width}px`;
-                      },
-                    },
-                  ],
-                },
-                paper: {
-                  sx: {
-                    maxWidth: 220,
-                    maxHeight: 150,
-                    width: "100%",
-                    boxSizing: "border-box",
-                  },
-                },
-              }}
-            />
-            <TextField
-              type="number"
-              label="Amount"
-              size="small"
-              value={toValue}
-              onChange={(e) => handleToValueChange(e.target.value)}
-              fullWidth
-              sx={{ mt: 1 }}
-              disabled={!to}
-            />
-          </Box>
-        </Box>
-        {/* Mensagem de instrução ou resultado */}
-        {!from || !to ? (
-          <Typography color="text.secondary" align="center">
-            Please select both currencies to see the exchange rate.
-          </Typography>
-        ) : loading ? (
+        {/* Loading, erro ou conteúdo */}
+        {loading ? (
           <Box
+            flex={1}
             display="flex"
             alignItems="center"
             justifyContent="center"
-            minHeight={60}
+            minHeight={180}
+            width="100%"
           >
-            <CircularProgress size={28} />
+            <CircularProgress size={32} />
           </Box>
         ) : error ? (
-          <Typography color="error">Error fetching exchange rate.</Typography>
-        ) : rate !== null ? (
-          <Typography variant="body2" color="text.secondary">
-            1 {from.currency} = {rate} {to.currency}
-          </Typography>
-        ) : null}
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        ) : (
+          <>
+            <Box display="flex" gap={2} mb={2}>
+              {/* Caixa da moeda de origem */}
+              <Box flex={1}>
+                <Autocomplete
+                  options={currencyOptions}
+                  getOptionLabel={(option) => option.label}
+                  value={from}
+                  onChange={(_, newValue) => setFrom(newValue)}
+                  renderInput={(params) => (
+                    <TextField {...params} label="From" size="small" disabled={loading} />
+                  )}
+                  disabled={loading}
+                  slotProps={{
+                    popper: {
+                      modifiers: [
+                        {
+                          name: "setWidth",
+                          enabled: true,
+                          phase: "beforeWrite",
+                          requires: ["computeStyles"],
+                          fn: ({ state }) => {
+                            state.styles.popper.width = `${state.rects.reference.width}px`;
+                          },
+                        },
+                      ],
+                    },
+                    paper: {
+                      sx: {
+                        maxWidth: 220,
+                        maxHeight: 150,
+                        width: "100%",
+                        boxSizing: "border-box",
+                      },
+                    },
+                  }}
+                />
+                <TextField
+                  type="number"
+                  label="Amount"
+                  size="small"
+                  value={fromValue}
+                  onChange={(e) => handleFromValueChange(e.target.value)}
+                  fullWidth
+                  sx={{ mt: 1 }}
+                  disabled={!from || loading}
+                />
+              </Box>
+              {/* Caixa da moeda de destino */}
+              <Box flex={1}>
+                <Autocomplete
+                  options={currencyOptions}
+                  getOptionLabel={(option) => option.label}
+                  value={to}
+                  onChange={(_, newValue) => setTo(newValue)}
+                  renderInput={(params) => (
+                    <TextField {...params} label="To" size="small" disabled={loading} />
+                  )}
+                  disabled={loading}
+                  slotProps={{
+                    popper: {
+                      modifiers: [
+                        {
+                          name: "setWidth",
+                          enabled: true,
+                          phase: "beforeWrite",
+                          requires: ["computeStyles"],
+                          fn: ({ state }) => {
+                            state.styles.popper.width = `${state.rects.reference.width}px`;
+                          },
+                        },
+                      ],
+                    },
+                    paper: {
+                      sx: {
+                        maxWidth: 220,
+                        maxHeight: 150,
+                        width: "100%",
+                        boxSizing: "border-box",
+                      },
+                    },
+                  }}
+                />
+                <TextField
+                  type="number"
+                  label="Amount"
+                  size="small"
+                  value={toValue}
+                  onChange={(e) => handleToValueChange(e.target.value)}
+                  fullWidth
+                  sx={{ mt: 1 }}
+                  disabled={!to || loading}
+                />
+              </Box>
+            </Box>
+            {/* Mensagem de instrução ou resultado */}
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              minHeight={40}
+              height={40}
+              mb={1}
+            >
+              {!from || !to ? (
+                <Typography color="text.secondary" align="center">
+                  Please select both currencies to see the exchange rate.
+                </Typography>
+              ) : rate !== null ? (
+                <Typography variant="body2" color="text.secondary">
+                  1 {from.currency} = {rate} {to.currency}
+                </Typography>
+              ) : null}
+            </Box>
+          </>
+        )}
         {/* Link para documentação da API */}
-        <Box mt="auto" pt={2}>
-          <Typography
-            variant="body2"
-            color="primary"
-            component="a"
-            href="https://docs.awesomeapi.com.br/api-de-moedas"
-            target="_blank"
-            rel="noopener noreferrer"
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: 1,
-              textDecoration: "none",
-            }}
-          >
-            Click to learn about the API
-            <span aria-hidden="true">❮</span>
-          </Typography>
-        </Box>
+        {!loading && !error && (
+          <Box mt="auto" pt={2}>
+            <Typography
+              variant="body2"
+              color="primary"
+              component="a"
+              href="https://docs.awesomeapi.com.br/api-de-moedas"
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                textDecoration: "none",
+              }}
+            >
+              Click to learn about the API
+              <span aria-hidden="true">❮</span>
+            </Typography>
+          </Box>
+        )}
       </CardContent>
     </Card>
   );

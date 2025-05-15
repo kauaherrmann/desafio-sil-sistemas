@@ -8,6 +8,7 @@ import {
   List,
   ListItem,
   ListItemText,
+  Alert,
 } from "@mui/material";
 import { useFetchData } from "../hooks/useFetchData";
 
@@ -16,9 +17,7 @@ const API_KEY = import.meta.env.VITE_GNEWS_API_KEY as string;
 const API_URL = `https://gnews.io/api/v4/top-headlines?lang=en&max=5&token=${API_KEY}`;
 
 const NewsCard = () => {
-  // Busca as notícias usando hook customizado
   const { data, loading, error } = useFetchData(API_URL, undefined, []);
-  // Mapeia os dados recebidos para um formato mais simples
   const news =
     data?.articles?.map((a: any) => ({
       title: a.title,
@@ -31,6 +30,7 @@ const NewsCard = () => {
       sx={{
         minWidth: 450,
         maxWidth: 450,
+        maxHeight: 250,
         width: "100%",
         flex: "1 1 360px",
         m: 1,
@@ -41,17 +41,17 @@ const NewsCard = () => {
     >
       <CardContent
         sx={{
-          minHeight: 220,
+          minHeight: 260,
+          maxHeight: 260,
           display: "flex",
           flexDirection: "column",
           color: "#fffefc",
         }}
       >
-        {/* Título do card */}
         <Typography variant="h6" gutterBottom sx={{ fontWeight: "bold", fontSize: 24, mb: 1 }}>
           News
         </Typography>
-        {/* Conteúdo: loading, erro ou lista de notícias */}
+        {/* Loading, erro ou conteúdo */}
         {loading ? (
           <Box
             display="flex"
@@ -62,7 +62,9 @@ const NewsCard = () => {
             <CircularProgress size={28} />
           </Box>
         ) : error ? (
-          <Typography color="error">{error}</Typography>
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
         ) : news.length > 0 ? (
           <List
             dense
@@ -70,20 +72,18 @@ const NewsCard = () => {
               maxHeight: 180,
               overflow: "auto",
               mb: 1,
-              // Customização da scrollbar
               '&::-webkit-scrollbar': {
                 width: 8,
-                backgroundColor: '#00c48c', // cor do track
+                backgroundColor: '#00c48c',
                 borderRadius: 8,
               },
               '&::-webkit-scrollbar-thumb': {
-                backgroundColor: '#00c48c', // cor do thumb
+                backgroundColor: '#00c48c',
                 borderRadius: 8,
               },
               '&::-webkit-scrollbar-thumb:hover': {
-                backgroundColor: '#00a37a', // cor do thumb ao passar o mouse
+                backgroundColor: '#00a37a',
               },
-              // Firefox
               scrollbarColor: '#00c48c #000133',
               scrollbarWidth: 'thin',
             }}
@@ -113,7 +113,7 @@ const NewsCard = () => {
                   }
                   secondary={item.description}
                   primaryTypographyProps={{ sx: { color: "#fffefc" } }}
-  secondaryTypographyProps={{ sx: { color: "#fffefc"} }}
+                  secondaryTypographyProps={{ sx: { color: "#fffefc"} }}
                 />
               </ListItem>
             ))}
@@ -124,25 +124,27 @@ const NewsCard = () => {
           </Typography>
         )}
         {/* Link para documentação da API */}
-        <Box mt="auto" pt={2}>
-          <Typography
-            variant="body2"
-            color="#00c48c"
-            component="a"
-            href="https://gnews.io/docs/"
-            target="_blank"
-            rel="noopener noreferrer"
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: 1,
-              textDecoration: "none",
-            }}
-          >
-            To learn more about this API
-            <span aria-hidden="true">➤</span>
-          </Typography>
-        </Box>
+        {!loading && !error && (
+          <Box mt="auto" pt={2}>
+            <Typography
+              variant="body2"
+              color="#00c48c"
+              component="a"
+              href="https://gnews.io/"
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                textDecoration: "none",
+              }}
+            >
+              To learn more about this API
+              <span aria-hidden="true">➤</span>
+            </Typography>
+          </Box>
+        )}
       </CardContent>
     </Card>
   );

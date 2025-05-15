@@ -16,16 +16,16 @@ import {
 } from "@mui/material";
 import { useFetchData } from "../hooks/useFetchData";
 
-// Lista de cidades disponíveis
+// Lista de cidades disponíveis para seleção
 const cities = ["São Paulo", "Rio de Janeiro", "Curitiba", "Passo Fundo", "Porto Alegre"];
 const API_KEY = import.meta.env.VITE_WEATHER_API_KEY as string;
 
 const WeatherCard = () => {
   // Estado para cidade selecionada
   const [city, setCity] = useState(cities[0]);
-  // Monta a URL da API
+  // Monta a URL da API de acordo com a cidade selecionada
   const url = `https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${encodeURIComponent(city)}`;
-  // Busca dados do clima
+  // Hook customizado para buscar dados do clima
   const { data, loading, error } = useFetchData(url, undefined, [city]);
 
   // Mapeia os dados recebidos para um formato mais simples
@@ -63,13 +63,14 @@ const WeatherCard = () => {
             gutterBottom
             sx={{ fontSize: 29, fontWeight: "bold", mt: 1 }}
           >
-            Weather forecast
+            Weather
           </Typography>
           <FormControl
             size="small"
-            sx={{ width: 160, minWidth: 160 }}
+            sx={{ width: 160, minWidth: 160, }}
             variant="standard"
           >
+            {/* Select de cidades, desabilitado durante loading */}
             <Select
               variant="standard"
               labelId="city-select-label"
@@ -77,6 +78,7 @@ const WeatherCard = () => {
               onChange={(e) => setCity(e.target.value)}
               IconComponent={ArrowDropDownIcon}
               disableUnderline
+              disabled={loading} // Desabilita enquanto carrega
               renderValue={(selected) => (
                 <Box display="flex" alignItems="center" gap={1}>
                   <LocationOnIcon sx={{ color: "#272727", fontSize: 22 }} />
@@ -109,8 +111,9 @@ const WeatherCard = () => {
             </Select>
           </FormControl>
         </Box>
-        {/* Conteúdo: loading, erro ou dados do clima */}
+        {/* Exibe loading, erro ou dados do clima */}
         {loading ? (
+          // Spinner enquanto carrega os dados
           <Box
             flex={1}
             display="flex"
@@ -121,14 +124,17 @@ const WeatherCard = () => {
             <CircularProgress size={32} />
           </Box>
         ) : error ? (
+          // Mensagem de erro amigável
           <Alert severity="error" sx={{ mb: 2 }}>
             {error === "Network Error"
               ? "Não foi possível conectar ao serviço de clima. Verifique sua conexão."
               : `Erro ao buscar dados do clima: ${error}`}
           </Alert>
         ) : weather ? (
+          // Exibe os dados do clima
           <>
             <Box display="flex" alignItems="center" gap={2} mb={2}>
+              {/* Ícone do clima */}
               {weather.icon && (
                 <img
                   src={weather.icon}
@@ -137,15 +143,18 @@ const WeatherCard = () => {
                   height={60}
                 />
               )}
+              {/* Temperatura atual */}
               <Typography variant="h4" sx={{ fontSize: 48 }}>
                 {weather.temp}
               </Typography>
+              {/* Descrição do clima */}
               <Box sx={{ flex: 1, display: "flex", justifyContent: "center" }}>
                 <Typography color="text.secondary" sx={{ fontSize: 22 }}>
                   {weather.desc}
                 </Typography>
               </Box>
             </Box>
+            {/* Sensação térmica */}
             <Typography
               variant="body2"
               sx={{
@@ -156,10 +165,11 @@ const WeatherCard = () => {
                 mb: 0.5,
               }}
             >
-              <DeviceThermostatIcon sx={{ fontSize: 23, mr: 1, color: "#0b72d2", opacity: 1 }} />
-              <span style={{ opacity: 0.7 }}>Feels like:</span>
+              <DeviceThermostatIcon sx={{ fontSize: 23, mr: 1, color: "#272727", opacity: 1 }} />
+              <span style={{ opacity: 0.8 }}>Feels like:</span>
               <span style={{ opacity: 1, fontWeight: 500, marginLeft: 6 }}>{weather.feelslike}</span>
             </Typography>
+            {/* Umidade */}
             <Typography
               variant="body2"
               sx={{
@@ -169,13 +179,13 @@ const WeatherCard = () => {
                 gap: 0.5,
               }}
             >
-              <WaterDropIcon sx={{ fontSize: 22, mr: 1, color: "#0b72d2", opacity: 1 }} />
-              <span style={{ opacity: 0.7 }}>Humidity:</span>
+              <WaterDropIcon sx={{ fontSize: 22, mr: 1, color: "#272727", opacity: 1 }} />
+              <span style={{ opacity: 0.8 }}>Humidity:</span>
               <span style={{ opacity: 1, fontWeight: 500, marginLeft: 6 }}>{weather.humidity}</span>
             </Typography>
           </>
         ) : null}
-        {/* Link para documentação da API */}
+        {/* Link para documentação da API, só aparece se não estiver carregando */}
         {!loading && (
           <Box mt="auto" pt={2}>
             <Typography

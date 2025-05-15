@@ -15,12 +15,22 @@ export function useFetchData<T = any>(
     if (!url) return;
     setLoading(true);
     setError(null);
-    axios
-      .get(url, config)
-      .then((res) => setData(res.data))
-      .catch((err) => setError(err.message || "Erro ao buscar dados"))
-      .finally(() => setLoading(false));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setData(null); // Limpa dados antigos ao iniciar nova busca
+
+    (async () => {
+      try {
+        const res = await axios.get(url, config);
+        // Delay artificial para visualização do loading
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        setData(res.data);
+        setError(null);
+      } catch (err: any) {
+        setError("Erro ao buscar dados. Tente novamente mais tarde.");
+        setData(null);
+      } finally {
+        setLoading(false);
+      }
+    })();
   }, deps);
 
   return { data, loading, error };
