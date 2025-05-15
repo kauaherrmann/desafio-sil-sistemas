@@ -21,7 +21,7 @@ function App() {
             position: "relative",
             zIndex: 2,
             width: "100%",
-            overflowX: "auto", // permite rolagem horizontal se necessário
+            overflowX: "auto", 
           }}
         >
           <WeatherCard />
